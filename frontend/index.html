@@ -1,9 +1,8 @@
 <script>
-  // Force browser to send requests to your live Render backend instead of localhost
+  // Intercept local API calls and reroute them to your live Render backend
   const _origFetch = window.fetch;
   window.fetch = function(url, options) {
     if (typeof url === 'string' && url.includes('http://localhost:8000/api')) {
-      // Swapping '/api' out if your backend handles routes directly (e.g. /auth/signup)
       url = url.replace('http://localhost:8000/api', 'https://onrender.com');
     }
     return _origFetch(url, options);
@@ -12,9 +11,9 @@
   const _origOpen = XMLHttpRequest.prototype.open;
   XMLHttpRequest.prototype.open = function(method, url, ...args) {
     if (typeof url === 'string' && url.includes('http://localhost:8000/api')) {
-      // Swapping '/api' out if your backend handles routes directly (e.g. /auth/signup)
       url = url.replace('http://localhost:8000/api', 'https://onrender.com');
     }
     return _origOpen.apply(this, [method, url, ...args]);
   };
 </script>
+
