@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <script>
-      // Force browser to send requests to Render instead of localhost
+      // Force browser to send requests to your live Render backend instead of localhost
       const _origFetch = window.fetch;
       window.fetch = function(url, options) {
         if (typeof url === 'string' && url.includes('http://localhost:8000/api')) {
