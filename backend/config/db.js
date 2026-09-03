@@ -1,14 +1,14 @@
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
-// Automatically switches between your cloud database string or fallback local variables
+// Automatically reads your live Render database URL string if available
 const sequelize = process.env.DATABASE_URL 
   ? new Sequelize(process.env.DATABASE_URL, {
       dialect: 'postgres',
       dialectOptions: {
         ssl: {
           require: true,
-          rejectUnauthorized: false // Required for hosted databases like Render Postgres
+          rejectUnauthorized: false // Crucial for cloud database authentication
         }
       },
       logging: false
