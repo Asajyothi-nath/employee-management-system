@@ -15,6 +15,8 @@ const app = express();
 // MIDDLEWARES
 app.use(express.json());
 
+// This allows your server to accept secure API requests from any Vercel domain variant
+app.use(cors()); 
 /*app.use(cors({
 
     origin: "http://localhost:5173",
@@ -22,15 +24,7 @@ app.use(express.json());
     credentials: true
 }));*/
 
-app.use(cors({
-    origin: [
-        "http://localhost:5173", 
-        "https://vercel.app"
-    ],
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"]
-}));
+
 
 
 app.use(cookieParser());
