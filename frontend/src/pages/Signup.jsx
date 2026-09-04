@@ -31,7 +31,8 @@ export default function Signup() {
       const response = await axios.post(
 
         //"http://localhost:8000/api/auth/signup",
-        "/auth/signup",
+         "https://onrender.com",
+
 
 
         {
