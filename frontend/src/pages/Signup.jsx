@@ -29,17 +29,16 @@ export default function Signup() {
     try {
 
       const response = await axios.post(
-         "https://onrender.com",
+        "https://onrender.com",
         {
-
           name,
           email,
           password,
           role, 
           phone_number
-
         }
       );
+
 
       console.log(response.data);
 
