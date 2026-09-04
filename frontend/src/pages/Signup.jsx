@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import axios from "axios";
+//import axios from "axios";
+import axiosInstance from '../axiosInstance'; // Adjust paths (../) depending on your folder layout
+
 
 import { toast } from "react-toastify";
 
@@ -27,7 +29,9 @@ export default function Signup() {
 
       const response = await axios.post(
 
-        "http://localhost:8000/api/auth/signup",
+        //"http://localhost:8000/api/auth/signup",
+        "/auth/signup",
+
 
         {
 
