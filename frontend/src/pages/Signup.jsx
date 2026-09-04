@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 //import axios from "axios";
-import axiosInstance from "../axiosInstance"; // Adjust paths (../) depending on your folder layout
+import axiosInstance from "../utils/axiosInstance"; // Adjust paths (../) depending on your folder layout
 
 
 import { toast } from "react-toastify";
