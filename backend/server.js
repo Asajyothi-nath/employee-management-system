@@ -17,8 +17,25 @@ app.use(express.json());
 
 const cors = require('cors');
 
-// This explicitly allows all dynamic Vercel subdomains AND local testing while supporting cookies securely
+// 🌟 CRITICAL: This MUST sit directly under 'app' initialization before ANY other app.use statement!
 app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || origin.includes('vercel.app') || origin.includes('localhost')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Blocked by CORS policy'));
+    }
+  },
+  credentials: true
+}));
+
+// All other middleware items (like express.json(), cookieParser(), routers) go BELOW the CORS block
+app.use(express.json());
+app.use(cookieParser());
+
+
+// This explicitly allows all dynamic Vercel subdomains AND local testing while supporting cookies securely
+/*app.use(cors({
   origin: function (origin, callback) {
     // Allows localhost or any preview/production domain variants from Vercel
     if (!origin || origin.includes('vercel.app') || origin.includes('localhost')) {
@@ -30,7 +47,7 @@ app.use(cors({
   credentials: true
 }));
 
-app.use(cookieParser());
+app.use(cookieParser());*/
 
 
 // This allows your server to accept secure API requests from any Vercel domain variant
