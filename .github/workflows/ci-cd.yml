@@ -16,11 +16,19 @@ jobs:
       with:
         node-version: '20'
 
-    - name: Install Dependencies
-      run: npm ci --legacy-peer-deps || npm install
-
-    - name: Build Application
-      run: npm run build --if-present
+    - name: Find and Install Dependencies
+      run: |
+        # Search for where package.json is hiding in your repository
+        TARGET_DIR=$(find . -name "package.json" -not -path "*/node_modules/*" | head -n 1 | xargs dirname)
+        
+        if [ -z "$TARGET_DIR" ] || [ "$TARGET_DIR" = "." ]; then
+          echo "Running install in root directory..."
+          npm install
+        else
+          echo "Found package.json in subfolder: $TARGET_DIR. Moving inside..."
+          cd "$TARGET_DIR"
+          npm install
+        fi
 
   deploy:
     needs: build-and-test
@@ -31,10 +39,10 @@ jobs:
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
-        key:  ${{ secrets.EC2_SSH_KEY }}
+        key: ${{ secrets.EC2_SSH_KEY }}
         script: |
-          # 1. Smart Find: Locate the project folder dynamically if path is unknown
-          PROJECT_DIR=$(find /home/${{ secrets.EC2_USER }} -maxdepth 2 -name "package.json" -exec dirname {} \; | head -n 1)
+          # 1. Locate the project folder dynamically on AWS
+          PROJECT_DIR=$(find /home/${{ secrets.EC2_USER }} -maxdepth 3 -name "package.json" -not -path "*/node_modules/*" -exec dirname {} \; | head -n 1)
           
           if [ -z "$PROJECT_DIR" ]; then
             echo "Error: Could not find your Node project directory on AWS."
@@ -48,7 +56,7 @@ jobs:
           git reset --hard
           git pull origin main
           
-          # 3. Clean install production packages
+          # 3. Install packages directly inside that folder
           npm install --production
           
           # 4. Safely restart your active process
